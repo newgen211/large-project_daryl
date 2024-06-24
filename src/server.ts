@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import { logger } from './logs/logger';
 import connect from './db/connect';
+import authRouter from './routes/authRouter';
 
 // Load environment variables 
 dotenv.config();
@@ -24,7 +25,7 @@ const startServer = async () => {
         app.use(express.static(path.join(__dirname, '../client/dist')));
 
         // Define API routes and other middleware
-
+        app.use('/api/auth', authRouter);
 
         // Start the server
         app.listen(PORT, () => {

@@ -24,6 +24,11 @@ const startServer = async () => {
         // Serve the React Frontend
         app.use(express.static(path.join(__dirname, '../client/dist')));
 
+        // Catch-all route to serve React's index.html for client-side routing
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+        });
+
         // Define API routes and other middleware
         app.use('/api/auth', authRouter);
 

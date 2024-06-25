@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { request_logger } from '../../logs/logger';
+import bcrypt from 'bcrypt';
 import User from '../../models/UserModel';
-import { ConflictErrorResponseInterface } from '../../interfaces/ConflictError';
+import hashPassword from '../../utils/hashPassword';
 
 const registerController = async (req:Request, res:Response):Promise<any> => {
 
@@ -10,6 +11,13 @@ const registerController = async (req:Request, res:Response):Promise<any> => {
         // Extract the request fields from the body
         const { first_name, last_name, email, username, password } = req.body;
  
+        // Hash the user's password for safe storage
+        const hash = await hashPassword(password);
+
+        // Create new user
+        const user = new User({first_name, last_name, email, username, password:hash});
+        await user.save();
+
         return res.status(201).json({
             message: 'User registered successfully'
         });

@@ -28,7 +28,7 @@ const sanitizeInput = (req:InputRequestInterface, res:Response, next:NextFunctio
 
     });
 
-    // Attack the error response to the request
+    // Attach the error response to the request
     req.input_errors = response_errors;
 
     next();

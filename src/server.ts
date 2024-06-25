@@ -16,7 +16,7 @@ const startServer = async () => {
     try {
 
         // Create a connection to the database
-        await connect();
+        //await connect();
 
         // Parse request body as JSON
         app.use(express.json());

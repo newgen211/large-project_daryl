@@ -1,23 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
+import User from '../../models/UserModel';
+import { logger, request_logger } from '../../logs/logger'; 
 
-// Change User to what ever user modle path you have 
-import User, { UserDocument } from './model/User.mjs';
+interface CustomRequest extends Request {
+    userExists?: boolean;
+}
 
-const verify_username_middleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const verifyUsernameMiddleware = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
     const { username } = req.params as { username: string };
     try {
-        const existingUser: UserDocument | null = await User.findOne({ username });
+        const existingUser = await User.findOne({ username });
 
-        if (existingUser) {
-            req.userExists = true;
-        } else {
-            req.userExists = false;
-        }
+        req.userExists = !!existingUser;
         next();
     } catch (err) {
-        console.error('Error verifying username:', err);
-        res.status(500).json({ error: 'Internal server error' });
+        logger("ERROR",'Error verifying username:');
     }
 };
 
-export default verify_username_middleware;
+export default verifyUsernameMiddleware;
